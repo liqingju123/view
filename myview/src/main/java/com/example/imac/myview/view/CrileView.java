@@ -1,5 +1,9 @@
 package com.example.imac.myview.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,6 +16,10 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
 
 /**
  * Created by liqingju on 16/8/22.
@@ -23,34 +31,124 @@ public class CrileView extends View implements Runnable {
     int width;
     Canvas canvas;
     float lineX = 0;
-    double lineY2 = 0;
     Paint paint1 = new Paint();
+    private float leftCric = 200;
+    private float rightCric = 0;
+    private float criRodus = 20;
+    private final float huan = 200;
+    private float chanzhi = 0;
+    private ValueAnimator leftPointAnimator = ObjectAnimator.ofFloat(this, "leftCric", 0f, 400f);
+    private ValueAnimator rightPointAnimator = ObjectAnimator.ofFloat(this, "leftCric", 400f, 0f);
+    private AnimatorSet mAnimatorSet = new AnimatorSet();
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 //            angle = (int) (Math.random() * 100);
             angle += 20;
-            Log.e("======", "==========" + angle);
-            invalidate();
+
+//            leftPointAnimator.setCurrentPlayTime((long) (5000.0F * 1));
+//            postInvalidate();
+
+//            invalidate();
 //            mHandler.sendEmptyMessageDelayed(1, 2000);
         }
     };
 
     public CrileView(Context context) {
         super(context);
+        initAno();
     }
 
     public CrileView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initAno();
     }
 
     public CrileView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initAno();
     }
 
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(7);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(leftCric, Math.abs(chanzhi - getRightCric()), criRodus, paint);
+        canvas.drawCircle(200, 200, huan, paint);
+        Path path = new Path();
+        path.moveTo(0, 400);
+        path.lineTo(400, 400);
+        path.lineTo(400, 0);
+        path.moveTo(0, 200);
+        path.lineTo(400, 200);
+        path.moveTo(200, 200);
+        path.lineTo(leftCric, Math.abs(chanzhi - getRightCric()));
+        canvas.drawPath(path, paint);
+        Log.e("=====", leftCric + "   " + getRightCric());
+        if (!mAnimatorSet.isRunning()) {
+            mAnimatorSet.start();
+        }
+    }
+
+    void initAno() {
+        mAnimatorSet.setDuration(5000L);
+        leftPointAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                chanzhi = huan * 2;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        rightPointAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                chanzhi = 0;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        mAnimatorSet.playSequentially(leftPointAnimator, rightPointAnimator);
+//        mAnimatorSet.setInterpolator(new CycleInterpolator(2));
+    }
+
+
+    /**
+     * 绘制动态的 view
+     */
+    public void drawAnnorSin(Canvas canvas) {
         this.canvas = canvas;
         height = getHeight();
         width = getWidth();
@@ -65,7 +163,6 @@ public class CrileView extends View implements Runnable {
         textPaint.setColor(Color.RED);
         textPaint.setTextSize(30);
         textPaint.setAntiAlias(true);
-        Log.e("====", "绘制===");
         paint1.setColor(Color.RED);
         canvas.drawText("0", 120, getHeight() / 2 - 20, textPaint);
         for (int i = 100; i < getWidth(); i++) {
@@ -129,5 +226,26 @@ public class CrileView extends View implements Runnable {
 
             invalidate();
         }
+    }
+
+
+    public float getLeftCric() {
+//        Log.e("=====", "111222");
+        return leftCric;
+    }
+
+    public void setLeftCric(float leftCric) {
+        this.leftCric = leftCric;
+//        Log.e("=====", "111");
+        postInvalidate();
+    }
+
+
+    public float getRightCric() {
+        return (float) (Math.sqrt(Math.pow(huan, 2) - Math.pow(getLeftCric() - 200, 2)) + 200);
+    }
+
+    public void setRightCric(float rightCric) {
+        this.rightCric = rightCric;
     }
 }
