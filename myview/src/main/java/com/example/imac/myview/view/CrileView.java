@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
@@ -20,6 +21,8 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
+
+import java.util.List;
 
 /**
  * Created by liqingju on 16/8/22.
@@ -40,6 +43,9 @@ public class CrileView extends View implements Runnable {
     private ValueAnimator leftPointAnimator = ObjectAnimator.ofFloat(this, "leftCric", 0f, 400f);
     private ValueAnimator rightPointAnimator = ObjectAnimator.ofFloat(this, "leftCric", 400f, 0f);
     private AnimatorSet mAnimatorSet = new AnimatorSet();
+    private float t;
+
+    private ObjectAnimator animatorT = ObjectAnimator.ofFloat(this, "t", 0, 1);
 
     private Handler mHandler = new Handler() {
         @Override
@@ -73,6 +79,76 @@ public class CrileView extends View implements Runnable {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        PointF[] pointFs = new PointF[4];
+        pointFs[0] = new PointF();
+        pointFs[1] = new PointF();
+        pointFs[2] = new PointF();
+        pointFs[3] = new PointF();
+
+        pointFs[0].x = 800;
+        pointFs[0].y = 300;
+
+        pointFs[1].x = 00;
+        pointFs[1].y = 00;
+
+        pointFs[2].x = 00;
+        pointFs[2].y = 00;
+
+        pointFs[3].x = 200;
+        pointFs[3].y = 1200;
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        PointF pointF = pointFOnCuBic(pointFs, t);
+        canvas.drawCircle(pointF.x, pointF.y, 30, paint);
+        paint.setStrokeWidth(5);
+        if (!animatorT.isRunning()) {
+            animatorT.setDuration(500L);
+            animatorT.setInterpolator(new LinearInterpolator());
+            animatorT.start();
+        }
+
+
+    }
+
+    /**
+     * 绘制贝塞尔曲线
+     */
+    public void drawOn() {
+
+        PointF[] pointFs = new PointF[4];
+        pointFs[0] = new PointF();
+        pointFs[1] = new PointF();
+        pointFs[2] = new PointF();
+        pointFs[3] = new PointF();
+
+        pointFs[0].x = 100;
+        pointFs[0].y = 100;
+
+        pointFs[1].x = 50;
+        pointFs[1].y = 150;
+
+        pointFs[2].x = 200;
+        pointFs[2].y = 150;
+
+        pointFs[3].x = 250;
+        pointFs[3].y = 350;
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(5);
+        canvas.drawCircle();
+
+        for (int i = 0; i < 101; i++) {
+            PointF pointF = pointFOnCuBic(pointFs, i / 100f);
+//            PointF pointF = PointOnCubicBezier(pointFs, i / 100f);
+            canvas.drawPoint(pointF.x, pointF.y, paint);
+        }
+    }
+
+
+    /**
+     * 绘制围绕圆转圈的圆环
+     */
+    void drawZhuanQuan() {
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         paint.setStrokeWidth(7);
@@ -230,13 +306,11 @@ public class CrileView extends View implements Runnable {
 
 
     public float getLeftCric() {
-//        Log.e("=====", "111222");
         return leftCric;
     }
 
     public void setLeftCric(float leftCric) {
         this.leftCric = leftCric;
-//        Log.e("=====", "111");
         postInvalidate();
     }
 
@@ -247,5 +321,70 @@ public class CrileView extends View implements Runnable {
 
     public void setRightCric(float rightCric) {
         this.rightCric = rightCric;
+    }
+
+
+    /**
+     * 计算四项 贝塞尔曲线绘制
+     *
+     * @param pointFs
+     * @param t
+     * @return
+     */
+
+    private PointF PointOnCubicBezier(PointF[] pointFs, float t) {
+        double ax, bx, cx;
+        double ay, by, cy;
+        double tSquared, tCubed;
+        PointF result = new PointF();
+
+    /*計算多項式係數*/
+        cx = 4.0 * (pointFs[1].x - pointFs[0].x);
+        bx = 4.0 * (pointFs[2].x - pointFs[1].x) - cx;
+        ax = pointFs[3].x - pointFs[0].x - cx - bx;
+
+        cy = 4.0 * (pointFs[1].y - pointFs[0].y);
+        by = 4.0 * (pointFs[2].y - pointFs[1].y) - cy;
+        ay = pointFs[3].y - pointFs[0].y - cy - by;
+
+    /*計算位於參數值t的曲線點*/
+        tSquared = t * t;
+        tCubed = tSquared * t;
+
+        result.x = (float) ((ax * tCubed) + (bx * tSquared) + (cx * t) + pointFs[0].x);
+        result.y = (float) ((ay * tCubed) + (by * tSquared) + (cy * t) + pointFs[0].y);
+
+        return result;
+    }
+
+    private PointF pointFOnCuBic(PointF[] pointFs, float t) {
+        PointF result = new PointF();
+        result.x = getPointValue(pointFs[0].x, pointFs[1].x, pointFs[2].x, pointFs[3].x, t);
+        result.y = getPointValue(pointFs[0].y, pointFs[1].y, pointFs[2].y, pointFs[3].y, t);
+        return result;
+    }
+
+    private float getPointValue(float x0, float x1, float x2, float x3, float t) {
+        double pointX;
+        double tx = 1f - t;
+        double tx2 = tx * tx;
+        double tx3 = tx2 * tx;
+        Log.e("====", tx + "  ");
+        pointX = x0 * tx3
+                + 3f * x1 * t * tx2
+                + 3f * x2 * Math.pow(t, 2f) * tx
+                + x3 * Math.pow(t, 3f);
+        return (float) pointX;
+    }
+
+
+    public float getT() {
+        return t;
+    }
+
+    public void setT(float t) {
+        Log.e("=====", t + "  ");
+        this.t = t;
+        postInvalidate();
     }
 }
