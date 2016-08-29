@@ -16,13 +16,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.OvershootInterpolator;
-
-import java.util.List;
 
 /**
  * Created by liqingju on 16/8/22.
@@ -44,6 +40,13 @@ public class CrileView extends View implements Runnable {
     private ValueAnimator rightPointAnimator = ObjectAnimator.ofFloat(this, "leftCric", 400f, 0f);
     private AnimatorSet mAnimatorSet = new AnimatorSet();
     private float t;
+    Paint paint = new Paint();
+    Path path = new Path();
+    private double X1, X2, X3, X4;
+    private double Y1, Y2, Y3, Y4;
+
+    private float moveX, moveY, MoveF;
+    private float MoveCenterX, MoveCenterY;
 
     private ObjectAnimator animatorT = ObjectAnimator.ofFloat(this, "t", 0, 1);
 
@@ -76,9 +79,56 @@ public class CrileView extends View implements Runnable {
         initAno();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            moveX = event.getX();
+            moveY = event.getY();
+            MoveF = 100;
+            invalidate();
+        }
+        return true;
+
+
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        double atan = Math.atan((moveY - 200d) / (moveX - 200d));
+        double tempX = 200 * Math.sin(atan);
+        double tempY = 200 * Math.cos(atan);
+
+        double tempX1 = MoveF * Math.sin(atan);
+        double tempY1 = MoveF * Math.cos(atan);
+        X1 = 200f + tempX;
+        Y1 = 200f - tempY;
+
+        X2 = 200f - tempX;
+        Y2 = 200f + tempY;
+
+        X3 = moveX - tempX1;
+        Y3 = moveY + tempY1;
+
+        X4 = moveX + tempX1;
+        Y4 = moveY - tempY1;
+        path.reset();
+        path.moveTo((float) X1, (float) Y1);
+        MoveCenterX = (moveX + 200f) * 0.5f;
+        MoveCenterY = (moveY + 200f) * 0.5f;
+        path.quadTo(MoveCenterX, MoveCenterY, (float) X4, (float) Y4);
+        path.lineTo((float) X3, (float) Y3);
+        path.quadTo(MoveCenterX, MoveCenterY, (float) X2, (float) Y2);
+        path.lineTo(200, 0);
+        canvas.drawCircle(200, 200, 200, paint);
+        canvas.drawCircle(moveX, moveY, MoveF, paint);
+        canvas.drawPath(path, paint);
+    }
+
+    /**
+     * 小圆点围绕贝塞尔曲线滑动
+     */
+    public void drawOnBeAn() {
         PointF[] pointFs = new PointF[4];
         pointFs[0] = new PointF();
         pointFs[1] = new PointF();
@@ -106,9 +156,8 @@ public class CrileView extends View implements Runnable {
             animatorT.setInterpolator(new LinearInterpolator());
             animatorT.start();
         }
-
-
     }
+
 
     /**
      * 绘制贝塞尔曲线
@@ -135,7 +184,7 @@ public class CrileView extends View implements Runnable {
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         paint.setStrokeWidth(5);
-        canvas.drawCircle();
+//        canvas.drawCircle(paint);
 
         for (int i = 0; i < 101; i++) {
             PointF pointF = pointFOnCuBic(pointFs, i / 100f);
@@ -171,6 +220,11 @@ public class CrileView extends View implements Runnable {
     }
 
     void initAno() {
+        paint.setStrokeWidth(5);
+        paint.setColor(Color.RED);
+        paint.setAntiAlias(true);//去除锯齿
+        paint.setStyle(Paint.Style.FILL);
+
         mAnimatorSet.setDuration(5000L);
         leftPointAnimator.addListener(new Animator.AnimatorListener() {
             @Override
@@ -386,5 +440,15 @@ public class CrileView extends View implements Runnable {
         Log.e("=====", t + "  ");
         this.t = t;
         postInvalidate();
+    }
+
+
+    /**
+     * 计算两点之间的距离
+     *
+     * @return 两点之间的距离
+     */
+    private float vectorToPoint(float X1, float Y1, float X2, float Y2) {
+        return (float) Math.sqrt(Math.pow(Math.abs(X2 - X1), 2) + Math.pow(Math.abs(Y2 - Y1), 2));
     }
 }
