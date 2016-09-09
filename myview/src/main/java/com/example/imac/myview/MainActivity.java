@@ -2,6 +2,7 @@ package com.example.imac.myview;
 
 import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,51 +15,41 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import com.example.imac.myview.activity.ActivityA;
+import com.example.imac.myview.activity.ViewActivity;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button mButton;
-
+    private Button mActivityButton;
+    private Button mActivityAnnButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mButton = (Button) findViewById(R.id.button);
-        mButton.setOnClickListener(this);
-//        ActivityOptionsCompat.makeCustomAnimation();
+        mActivityButton = (Button) findViewById(R.id.activity_ann);
+        mActivityAnnButton = (Button) findViewById(R.id.activity_view);
+        mActivityButton.setOnClickListener(this);
+        mActivityAnnButton.setOnClickListener(this);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 
     @Override
     public void onClick(View v) {
-        performAnimate();
-    }
 
-    private void performAnimate() {
-        ViewWrapper wrapper = new ViewWrapper(mButton);
-        ObjectAnimator.ofInt(mButton, "width", 2000).setDuration(5000).start();
-    }
-
-
-    private static class ViewWrapper {
-        private View mTarget;
-
-        public ViewWrapper(View target) {
-            mTarget = target;
+        switch (v.getId()) {
+            case R.id.activity_view:
+                Intent intent = new Intent(this, ActivityA.class);
+                startActivity(intent);
+                break;
+            case R.id.activity_ann:
+                intent = new Intent(this, ViewActivity.class);
+                startActivity(intent);
+                break;
         }
 
-        public int getWidth() {
-            return mTarget.getLayoutParams().width;
-        }
 
-        public void setWidth(int width) {
-            mTarget.getLayoutParams().width = width;
-            mTarget.requestLayout();
-        }
     }
+
 
 }
