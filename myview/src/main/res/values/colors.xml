@@ -3,4 +3,45 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="fuchsia">#FF00FF</color>
+    <color name="red">#FF0000</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="gray">#808080</color>
+    <color name="olive">#808000</color>
+    <color name="purple">#800080</color>
+    <color name="maroon">#800000</color>
+    <color name="aqua">#00FFFF</color>
+    <color name="lime">#00FF00</color>
+    <color name="teal">#008080</color>
+    <color name="green">#008000</color>
+    <color name="blue">#0000FF</color>
+    <color name="navy">#000080</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="semitransparent">#66000000</color>
+
+    <color name="AppColorBlue">#6464ac</color>
+    <color name="AppColorGold">#e5aa44</color>
+    <color name="AppColorPink">#fa99cc</color>
+    <color name="AppColorGreen">#337733</color>
+    <color name="AppColorBlack">#000000</color>
+
+    <color name="AppColorLightBlue">#a4a4ac</color>
+    <color name="AppColorLightGold">#f8bb88</color>
+    <color name="AppColorLightPink">#d877aa</color>
+    <color name="AppColorLightGreen">#44AA44</color>
+    <color name="AppColorLightBlack">#565656</color>
+
+    <color name="AppColorBlueFaint">#666464fc</color>
+    <color name="AppColorGoldFaint">#66e5aa44</color>
+    <color name="AppColorPinkFaint">#66fa99cc</color>
+    <color name="AppColorGreenFaint">#66337733</color>
+    <color name="AppColorBlackFaint">#66000000</color>
+
+    <color name="main_background">#FFFFFF</color>
+    <color name="black_theme_background">#FFFFFF</color>
+
 </resources>

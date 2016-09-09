@@ -2,14 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.example.imac.myview.view.CrileView
-        android:layout_width="300dp"
+        android:layout_width="500dp"
         android:layout_height="500dp"
         android:background="@android:color/white" />
+
+    <!--<com.example.imac.myview.view.ElasticRoundView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
 
     <Button

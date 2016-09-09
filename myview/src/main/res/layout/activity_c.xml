@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/default_margin"
+    android:paddingLeft="@dimen/default_margin"
+    android:paddingRight="@dimen/default_margin"
+    android:paddingTop="@dimen/default_margin">
+
+    <Button
+        android:id="@+id/fuchsiaView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_weight="1"
+        android:background="@color/fuchsia"
+        android:padding="@dimen/big_padding"
+        android:text="@string/hello_world"
+        android:transitionName="fuchsiaView" />
+
+</RelativeLayout>
