@@ -20,6 +20,12 @@
             android:layout_height="50dp"
             android:text="view_draw动画" />
 
+        <Button
+            android:id="@+id/activity_scale"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="缩放" />
+
 
     </LinearLayout>
 

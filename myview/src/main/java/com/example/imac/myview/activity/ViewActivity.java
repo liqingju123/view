@@ -3,6 +3,7 @@ package com.example.imac.myview.activity;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -11,7 +12,7 @@ import com.example.imac.myview.R;
 /**
  * Created by liqingju on 16/9/9.
  */
-public class ViewActivity extends Activity implements  View.OnClickListener {
+public class ViewActivity extends Activity implements View.OnClickListener {
 
     private Button mButton;
 
@@ -19,7 +20,7 @@ public class ViewActivity extends Activity implements  View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_view);
         mButton = (Button) findViewById(R.id.button);
         mButton.setOnClickListener(this);
     }
@@ -32,7 +33,7 @@ public class ViewActivity extends Activity implements  View.OnClickListener {
 
     private void performAnimate() {
         ViewWrapper wrapper = new ViewWrapper(mButton);
-        ObjectAnimator.ofInt(wrapper, "width", 2000).setDuration(5000).start();
+        ObjectAnimator.ofInt(wrapper, "width", 9000).start();
     }
 
 
@@ -48,6 +49,7 @@ public class ViewActivity extends Activity implements  View.OnClickListener {
         }
 
         public void setWidth(int width) {
+            Log.e("=====", width + "   ");
             mTarget.getLayoutParams().width = width;
             mTarget.requestLayout();
         }

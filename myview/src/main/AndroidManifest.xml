@@ -22,6 +22,7 @@
         <activity android:name=".activity.ActivityA" />
         <activity android:name=".activity.ActivityB" />
         <activity android:name=".activity.ActivityC" />
+        <activity android:name=".activity.ScaleActivity" />
 
     </application>
 

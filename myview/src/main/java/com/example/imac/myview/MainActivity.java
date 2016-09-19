@@ -16,12 +16,14 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import com.example.imac.myview.activity.ActivityA;
+import com.example.imac.myview.activity.ScaleActivity;
 import com.example.imac.myview.activity.ViewActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button mActivityButton;
     private Button mActivityAnnButton;
+    private Button mActivityScaleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mActivityButton = (Button) findViewById(R.id.activity_ann);
         mActivityAnnButton = (Button) findViewById(R.id.activity_view);
+        mActivityScaleButton = (Button) findViewById(R.id.activity_scale);
+        mActivityScaleButton.setOnClickListener(this);
         mActivityButton.setOnClickListener(this);
         mActivityAnnButton.setOnClickListener(this);
     }
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(this, ViewActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.activity_scale:
+                intent = new Intent(this, ScaleActivity.class);
+                startActivity(intent);
         }
 
 
